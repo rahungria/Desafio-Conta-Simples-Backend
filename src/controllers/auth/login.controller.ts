@@ -6,7 +6,51 @@ import { Users } from "@src/db/user.model.mongo";
 
 export const login = (req: Request, res: Response, next: NextFunction) =>
 {
-  // do work
+  console.log(`Login user: ${req.body.username}`);
+  
+  Users.findOne({username: req.body.username})
+    .then(
+      (document) => {
+
+        if (!document){
+          console.log("User not Found");
+
+          return res.status(404).json({
+            meta: {
+              statusCode: 404,
+              message: "User not found"
+            }
+          })
+        }
+
+        console.log(`User found!`);
+
+        bcrypt.compare(req.body.password, document.password)
+          .then(
+            (matched) => {
+              if (!matched){
+                return res.status(401).json({
+                  meta: {
+                    statusCode: 401,
+                    message: "Password not matching",
+                  }
+                })
+              }
+
+              // gen jwt token
+              return res.status(200).json({
+                meta: {
+                  statusCode: 200,
+                  message: "Login successful",
+                },
+                content: {
+      
+                }
+              })
+            }
+          )
+      }
+    )
 }
 
 export const signup = (req: Request, res: Response, next: NextFunction) => 
@@ -18,7 +62,7 @@ export const signup = (req: Request, res: Response, next: NextFunction) =>
       const user: IUser = {username: req.body.username, password: hash};
 
       return Users.create(user)
-    }, 
+    },
     // Failed to hash password
     (reason) => {
       return res.status(500).json({

@@ -19,7 +19,7 @@ const UserSchema: Schema<UserMongoModel> = new Schema<UserMongoModel>(
   }
 )
 
-const Users = mongoose.model("Users", UserSchema);
+const Users = mongoose.model<UserMongoModel>("Users", UserSchema);
 
 export {
   UserMongoModel, 
