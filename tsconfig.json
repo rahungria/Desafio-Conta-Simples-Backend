@@ -46,6 +46,7 @@
     "paths": {
       "@src/*": ["./src/*"],
       "@configs/*": ["./src/config/*"],
+      "@controllers/*": ["./src/controllers/*"],
       "@cores/*": ["./src/core/*"],
       "@models/*": ["./src/model/*"],
       "@routes/*": ["./src/routes/*"]
