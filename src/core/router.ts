@@ -4,6 +4,6 @@ import { LoginRoutes } from "@routes/auth/login.route";
 
 const router = Router();
 
-router.use(LoginRoutes);
+router.use('/api/login', LoginRoutes);
 
 export { router }
