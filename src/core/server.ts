@@ -4,12 +4,14 @@ import bodyparser from "body-parser";
 
 import { connect } from "@configs/dbconnection";
 import { secrets } from "@src/secrets/secrets";
+import { router } from "@cores/router";
 
 let app = express();
 
 app.use(bodyparser.json());   // allow parsing of json from requests, etc
 app.use(cors());              // enable cors for the whole application
 
+// connect to mongodb, maybe separate the promise here
 connect(secrets.mongo_connection_string)
   .then( (connection) => {
     console.log("Connection Successfull");
@@ -19,6 +21,9 @@ connect(secrets.mongo_connection_string)
   })
 
 let port = process.env.PORT || 3000;
+
+// Apply core router
+app.use(router);
 
 console.log(`Listening on Port: ${port}`);
 app.listen(3000);
