@@ -1,4 +1,3 @@
-import {  } from 'express';
 import mongoose, { Document, Schema } from 'mongoose';
 
 import { IUser } from '@models/user.model';
