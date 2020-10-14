@@ -47,5 +47,14 @@ Conterá instruções de uso e conexão, assim que for relevante.
 >>> + *sortByDate:*
 >>> 		+ *"true"*
 >>
+>> fetches all the statements from the given account, filtering and sorting according to the query params
+>> - requires authentication
+>> - requires authorization
+>
+>> **GET /api/statements/:accountID/last**
+>> fetches the last statement of the account whose user is logged in
+>> - requires authentication
+>> - requires authorization
+>>
 >> receives an *accountID* and fetches the full statement, filtered by: *paymentType* and sorted by: *date of emission*
 >> + requires authentication

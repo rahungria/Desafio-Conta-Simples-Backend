@@ -37,7 +37,7 @@ export const login = (req: Request, res: Response, next: NextFunction) =>
               jwt.sign(
                 {
                   exp: Math.floor(Date.now() / 1000) + jwt_timeout/1000,
-                  _id: document._id,
+                  user_id: document._id,
                 }, 
                 secrets.jwt_secret,
                 // async signing of the jwt
@@ -81,9 +81,13 @@ export const signup = (req: Request, res: Response, next: NextFunction) =>
     // password hashed successfully
     .then( 
     (hash) => {
-      const user: IUser = {username: req.body.username, password: hash};
+      const user: IUser = {
+        username: req.body.username, 
+        password: hash, 
+        role: req.body.role
+      };
 
-      return Users.create(user);
+      return Users.create(user); 
     },
     // Failed to hash password
     (reason) => {

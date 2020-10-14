@@ -1,6 +1,7 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
 import { IUser } from '@models/user.model';
+import { AccountMongoModel } from './account.model.mongo';
 
 type UserMongoModel = IUser & Document;
 
@@ -14,6 +15,10 @@ const UserSchema: Schema<UserMongoModel> = new Schema<UserMongoModel>(
     password: {
       type: String,
       required: true,
+    },
+    role: {
+      rolename: { type:String, required:false },
+      account: { type:Number, required:false }
     }
   }
 )

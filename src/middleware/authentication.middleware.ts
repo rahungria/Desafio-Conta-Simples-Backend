@@ -1,6 +1,8 @@
-import { secrets } from "@src/secrets/secrets";
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
+
+import { secrets } from "@src/secrets/secrets";
+import { AuthJWT } from "@models/authenticationJWT.model";
 
 export const jwt_authentication = (req: Request, res: Response, next: NextFunction) => 
 {
@@ -29,11 +31,21 @@ export const jwt_authentication = (req: Request, res: Response, next: NextFuncti
               statusCode: 401,
               message: "Invalid Token"
             }
-          })
+          });
+        }
+        const token = decoded as AuthJWT;
+        if (!token) {
+          return res.status(401).json({
+            meta: {
+              statusCode: 401,
+              message: "Invalid Token Payload"
+            }
+          });
         }
         // flow normal token valido
         // mais alguma validação? talvez nao tenho certeza absoluta
         // authorization: put decoded user on request and forward
+        req.params.user_id = token.user_id;
         next();
     })
   }
