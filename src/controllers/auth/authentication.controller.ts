@@ -3,7 +3,7 @@ import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken";
 
 import { IUser } from "@models/user.model";
-import { Users } from "@src/db/user.model.mongo";
+import { UserMongoModel, Users } from "@src/db/user.model.mongo";
 import { secrets } from "@src/secrets/secrets";
 
 export const login = (req: Request, res: Response, next: NextFunction) =>
@@ -83,7 +83,7 @@ export const signup = (req: Request, res: Response, next: NextFunction) =>
     (hash) => {
       const user: IUser = {username: req.body.username, password: hash};
 
-      return Users.create(user)
+      return Users.create(user);
     },
     // Failed to hash password
     (reason) => {
@@ -101,6 +101,9 @@ export const signup = (req: Request, res: Response, next: NextFunction) =>
         meta: {
           statusCode: 201,
           message: "User created successfully",
+        },
+        content: {
+          user: (doc as UserMongoModel)._id,
         }
       })
     },

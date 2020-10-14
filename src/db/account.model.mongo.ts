@@ -6,17 +6,17 @@ type AccountMongoModel = IAccount & Document;
 
 const AccountSchema: Schema<AccountMongoModel> = new Schema<AccountMongoModel>(
   {
-    id: {type:Number, unique:true},
-    nome: String,
-    cnpj: {type:String, unique:true},
-    dadosBancarios: {
-      banco: Number,
-      bancoNome: String,
-      agencia: Number,
-      conta: Number,
-      digitoConta: String
+    id: {type:Number, unique:true, required:true},
+    nome: {type:String, required:true},
+    cnpj: {type:String, required:true, unique:true},
+    dadosBancario: {
+      banco: {type:Number, required:true},
+      bancoNome: {type:String, required:true},
+      agencia: {type:Number, required:true},
+      conta: {type:Number, required:true},
+      digitoConta: {type:String, required:true}
     },
-    saldo: Number
+    saldo: {type:Number, required:true}
   }
 )
 
