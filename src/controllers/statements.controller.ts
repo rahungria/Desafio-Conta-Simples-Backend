@@ -7,7 +7,7 @@ import { isStatement, IStatement } from "@models/statement.model";
 // maybe use a cursor and an iterator?
 export const getFullStatement = (req: Request, res: Response, next: NextFunction) =>
 {
-  const id :number = +req.params.accountid;
+  const id :number = +req.params.accountID;
   // id is NaN
   if (!id){
     return res.status(400).json({
