@@ -1,6 +1,8 @@
-import { secrets } from "@src/secrets/secrets";
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
+
+import { secrets } from "@src/secrets/secrets";
+import { AuthJWT } from "@models/authenticationJWT.model";
 
 export const jwt_authentication = (req: Request, res: Response, next: NextFunction) => 
 {
@@ -34,6 +36,8 @@ export const jwt_authentication = (req: Request, res: Response, next: NextFuncti
         // flow normal token valido
         // mais alguma validação? talvez nao tenho certeza absoluta
         // authorization: put decoded user on request and forward
+        req.params.user_id = (<AuthJWT>decoded)?.user_id;
+        console.log(req.params.user_id);
         next();
     })
   }

@@ -2,5 +2,10 @@ export interface IUser
 {
   username: string;
   password: string;
-  // maybe more, not for this exercise
+  
+  // admin, user
+  role: {
+    rolename: string;
+    account: number;
+  };
 }
