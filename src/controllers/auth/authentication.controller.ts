@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import bcrypt, {  } from "bcrypt"
-import jwt, { JsonWebTokenError } from "jsonwebtoken";
+import bcrypt from "bcrypt"
+import jwt from "jsonwebtoken";
 
 import { IUser } from "@models/user.model";
 import { Users } from "@src/db/user.model.mongo";
@@ -11,7 +11,7 @@ export const login = (req: Request, res: Response, next: NextFunction) =>
   Users.findOne({username: req.body.username})
     .then(
       (document) => {
-
+        // document not found
         if (!document){
           return res.status(404).json({
             meta: {
@@ -20,7 +20,7 @@ export const login = (req: Request, res: Response, next: NextFunction) =>
             }
           })
         }
-        // not properly chaining promises to keep document variable alive thoughout middleware
+        // not properly chaining promises to keep 'document' variable from 'findOne' in scope thoughout function
         bcrypt.compare(req.body.password, document.password)
           .then(
             (matched) => {
@@ -51,7 +51,7 @@ export const login = (req: Request, res: Response, next: NextFunction) =>
                       }
                     })
                   }
-                  // normal flow
+                  // set jwt token as cookie
                   res.cookie(
                     "jwt",
                     token,
@@ -67,7 +67,8 @@ export const login = (req: Request, res: Response, next: NextFunction) =>
                       message: "Login successful",
                     }
                   });
-                });
+                }
+              );
             }
           )
       }
