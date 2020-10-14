@@ -1,20 +1,18 @@
 import { Request, Response, NextFunction } from "express";
 import bcrypt, {  } from "bcrypt"
+import jwt, { JsonWebTokenError } from "jsonwebtoken";
 
 import { IUser } from "@models/user.model";
 import { Users } from "@src/db/user.model.mongo";
+import { secrets } from "@src/secrets/secrets";
 
 export const login = (req: Request, res: Response, next: NextFunction) =>
-{
-  console.log(`Login user: ${req.body.username}`);
-  
+{  
   Users.findOne({username: req.body.username})
     .then(
       (document) => {
 
         if (!document){
-          console.log("User not Found");
-
           return res.status(404).json({
             meta: {
               statusCode: 404,
@@ -22,9 +20,7 @@ export const login = (req: Request, res: Response, next: NextFunction) =>
             }
           })
         }
-
-        console.log(`User found!`);
-
+        // not properly chaining promises to keep document variable alive thoughout middleware
         bcrypt.compare(req.body.password, document.password)
           .then(
             (matched) => {
@@ -36,17 +32,42 @@ export const login = (req: Request, res: Response, next: NextFunction) =>
                   }
                 })
               }
-
-              // gen jwt token
-              return res.status(200).json({
-                meta: {
-                  statusCode: 200,
-                  message: "Login successful",
-                },
-                content: {
-      
-                }
-              })
+              
+              const jwt_timeout: number = 1000 * 60 * 60; // 1 min
+              jwt.sign(
+                {
+                  exp: Math.floor(Date.now() / 1000) + jwt_timeout/1000,
+                  _id: document._id,
+                }, 
+                secrets.jwt_secret,
+                // async signing of the jwt
+                (err: Error|null, token: string|undefined) => {
+                  // weird server side error
+                  if (err){
+                    return res.status(500).json({
+                      meta: {
+                        statusCode: 500,
+                        message: "Failed Signin Session Token",
+                      }
+                    })
+                  }
+                  // normal flow
+                  res.cookie(
+                    "jwt",
+                    token,
+                    {
+                      httpOnly: true,
+                      maxAge: jwt_timeout,
+                      signed: false
+                    }
+                  );
+                  return res.status(200).json({
+                    meta: {
+                      statusCode: 200,
+                      message: "Login successful",
+                    }
+                  });
+                });
             }
           )
       }
@@ -75,8 +96,6 @@ export const signup = (req: Request, res: Response, next: NextFunction) =>
     // Document created successfully
     .then(
     (doc) => {
-      console.log(`User created: ${doc}`);
-
       return res.status(201).json({
         meta: {
           statusCode: 201,
