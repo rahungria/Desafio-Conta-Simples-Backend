@@ -1,6 +1,9 @@
-import { AccountMongoModel, Accounts } from "@src/db/account.model.mongo";
-import { IAccount, isAccount } from "@src/model/account.model";
 import { Request, Response, NextFunction } from "express";
+
+import { AccountMongoModel, Accounts } from "@src/db/account.model.mongo";
+import { StatementMongoModel, Statements } from "@src/db/statement.model.mongo";
+import { IAccount, isAccount } from "@models/account.model";
+import { isStatement, IStatement } from "@models/statement.model";
 
 export const getSaldo = (req: Request, res: Response, next: NextFunction) =>
 {
@@ -76,7 +79,7 @@ export const createAccount = (req: Request, res: Response, next: NextFunction) =
     })
 }
 
-export const getExtrato = (req: Request, res: Response, next: NextFunction) =>
+export const getFullStatement = (req: Request, res: Response, next: NextFunction) =>
 {
   const id :number = +req.params.accountid;
   // id is NaN
@@ -100,4 +103,44 @@ export const getExtrato = (req: Request, res: Response, next: NextFunction) =>
       id: id
     }
   })
+}
+
+export const createStatements = (req: Request, res: Response, next: NextFunction) =>
+{
+  const statements: IStatement[] = req.body as IStatement[];
+  // if statement data in body is malformed maybe remove of replace (sync...)
+  for (let statement of statements){
+    if (!isStatement(statement)){
+      return res.status(400).json({
+        meta: {
+          statusCode: 400,
+          message: "Invalid Statement"
+        }
+      })
+    }
+  }
+
+  Statements.insertMany(statements)
+    .then(
+      (statements: StatementMongoModel[]) => {
+        res.status(201).json({
+          meta: {
+            statusCode: 200,
+            message: "Statements created"
+          },
+          content: {
+            statements: statements
+          }
+        })
+      }
+      // insertMany fails
+    , (reason) => {
+      return res.status(400).json({
+        meta: {
+          statusCode: 400,
+          message: "Statements couldn't be created",
+          code: reason.code
+        }
+      })
+    })
 }

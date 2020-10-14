@@ -2,7 +2,7 @@ import { secrets } from "@src/secrets/secrets";
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
-export const jwt_validation = (req: Request, res: Response, next: NextFunction) => 
+export const jwt_authentication = (req: Request, res: Response, next: NextFunction) => 
 {
   // if no cookies at all or no needed cookie
   if (Object.keys(req.cookies).length == 0 || !req.cookies['jwt']){
