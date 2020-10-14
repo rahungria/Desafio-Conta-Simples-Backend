@@ -1,4 +1,4 @@
-export interface IEmpresa {
+export interface IAccount {
   id: number;
   nome: string;
   cnpj: string;
