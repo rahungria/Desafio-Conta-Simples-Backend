@@ -6,6 +6,6 @@ import { Router } from "express";
 const router = Router();
 
 router.post('/', jwt_validation, createAccount); //endpoint to add more accounts to system
-router.get('/saldo/:accountID', getSaldo);
+router.get('/saldo/:id', getSaldo);
 
 export { router as AccountsRoute}

@@ -4,10 +4,35 @@ import { Request, Response, NextFunction } from "express";
 
 export const getSaldo = (req: Request, res: Response, next: NextFunction) =>
 {
-  const accID: number = +req.params.accountID;
-  Accounts.findOne({account_id: accID})
+  const id: number = +req.params.id;
+  // maybe search by _id (difficult to debug via postman)
+  Accounts.findOne({id: id})
     .then( (document: AccountMongoModel|null) => {
-      console.log(document);
+      if (!document){
+        return res.status(404).json({
+          meta: {
+            statusCode: 404,
+            message: "Account not found"
+          }
+        })
+      }
+      res.status(200).json({
+        meta: {
+          statusCode: 200,
+          message: "Account found"
+        },
+        content: {
+          saldo: document.saldo
+        }
+      })
+    },
+    (reason) => {
+      return res.status(400).json({
+        meta: {
+          statusCode: 400,
+          message: "Impossible to search for Account"
+        }
+      })
     })
 
   return res.status(200);
