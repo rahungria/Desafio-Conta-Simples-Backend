@@ -92,17 +92,31 @@ export const getFullStatement = (req: Request, res: Response, next: NextFunction
     })
   }
 
-  
-
-  return res.status(200).json({
-    meta: {
-      statusCode: 200,
-      message: "template response"
-    },
-    content: {
-      id: id
-    }
-  })
+  Statements.find({account_id: id})
+    .then(
+      (statements: StatementMongoModel[]) => {
+        // not found any statements
+        if (!statements || statements.length === 0){
+          return res.status(404).json({
+            meta: {
+              statusCode: 404,
+              message: "No statements could be found"
+            }
+          })
+        }
+        // found the statements
+        return res.status(200).json({
+          meta: {
+            statusCode: 200,
+            message: "Statements found"
+          },
+          content: {
+            // maybe return only the ids
+            statements: statements
+          }
+        })
+      }
+    )
 }
 
 export const createStatements = (req: Request, res: Response, next: NextFunction) =>
