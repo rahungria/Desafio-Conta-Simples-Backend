@@ -75,3 +75,29 @@ export const createAccount = (req: Request, res: Response, next: NextFunction) =
       })
     })
 }
+
+export const getExtrato = (req: Request, res: Response, next: NextFunction) =>
+{
+  const id :number = +req.params.accountid;
+  // id is NaN
+  if (!id){
+    return res.status(400).json({
+      meta: {
+        statusCode: 400,
+        message: "Invalid ID"
+      },
+    })
+  }
+
+  
+
+  return res.status(200).json({
+    meta: {
+      statusCode: 200,
+      message: "template response"
+    },
+    content: {
+      id: id
+    }
+  })
+}
