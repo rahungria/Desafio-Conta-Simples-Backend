@@ -10,6 +10,7 @@ import { exit } from "process";
 
 let app = express();
 
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());   // allow parsing of json from requests, etc
 app.use(cors());              // enable cors for the whole application
 app.use(cookieParser())       // enable cookie sending and parsing

@@ -79,6 +79,7 @@ export const createAccount = (req: Request, res: Response, next: NextFunction) =
     })
 }
 
+// maybe use a cursor and an iterator?
 export const getFullStatement = (req: Request, res: Response, next: NextFunction) =>
 {
   const id :number = +req.params.accountid;
@@ -91,8 +92,33 @@ export const getFullStatement = (req: Request, res: Response, next: NextFunction
       },
     })
   }
+  // Filter by date and filter by paymentType (credit debit)
+  // permissive of unknown parameters by ignoring
+  let sortbydate: boolean = false;
+  const filter: {[key:string]:any} = {account_id: id};
+  // payment type query specified
+  if (req.query.paymentType){
+    if (req.query.paymentType === "credit"){
+      filter.credito = true
+    }
+    else if (req.query.paymentType === "debit"){
+      filter.credito = false;
+    }
+  }
+  // sort by date query specified
+  if (req.query.sortByDate) {
+    if (req.query.sortByDate === "true"){
+      sortbydate = true;
+    }
+  }
 
-  Statements.find({account_id: id})
+  // return to user the possible queries for discovery
+  const validQuery = {
+    "paymentType": ["credit", "debit"],
+    "sortByDate": ["true"]
+  }
+
+  Statements.find(filter)
     .then(
       (statements: StatementMongoModel[]) => {
         // not found any statements
@@ -100,15 +126,22 @@ export const getFullStatement = (req: Request, res: Response, next: NextFunction
           return res.status(404).json({
             meta: {
               statusCode: 404,
-              message: "No statements could be found"
+              message: "No statements could be found" 
             }
           })
         }
-        // found the statements
+        
+        if (sortbydate){
+          statements = statements.sort( (a,b) => {
+            return a.dataTransacao.getUTCDate() - b.dataTransacao.getUTCDate();
+          })
+        }
+
         return res.status(200).json({
           meta: {
             statusCode: 200,
-            message: "Statements found"
+            message: "Statements found",
+            validQuery: validQuery
           },
           content: {
             // maybe return only the ids
