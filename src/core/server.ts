@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import { connect } from "@configs/dbconnection";
 import { secrets } from "@src/secrets/secrets";
 import { router } from "@cores/router";
+import { exit } from "process";
 
 let app = express();
 
@@ -19,7 +20,8 @@ connect(secrets.mongo_connection_string)
     console.log("Connection Successfull");
   })
   .catch( (reason) => {
-    console.log("Connection Failed");
+    console.log("Connection Failed...\nExiting");
+    exit(-1);
   })
 
 let port = process.env.PORT || 3000;
