@@ -16,7 +16,7 @@ const UserSchema: Schema<UserMongoModel> = new Schema<UserMongoModel>(
       type: String,
       required: true,
     },
-    role : {
+    role: {
       rolename: { type:String, required:false },
       account: { type:Number, required:false }
     }

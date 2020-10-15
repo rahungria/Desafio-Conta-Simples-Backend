@@ -7,8 +7,9 @@ export const getSaldo = (req: Request, res: Response, next: NextFunction) =>
 {
   const id: number = +req.params.id;
   // maybe search by _id (difficult to debug via postman)
-  Accounts.findOne({id: id})
+  Accounts.findOne({id: id}, {_id: 1})
     .then( (document: AccountMongoModel|null) => {
+      console.log(document?._id);
       if (!document){
         return res.status(404).json({
           meta: {
@@ -31,7 +32,8 @@ export const getSaldo = (req: Request, res: Response, next: NextFunction) =>
       return res.status(400).json({
         meta: {
           statusCode: 400,
-          message: "Impossible to search for Account"
+          message: "Impossible to search for Account",
+          code: reason.code
         }
       })
     })

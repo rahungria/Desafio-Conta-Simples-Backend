@@ -31,13 +31,21 @@ export const jwt_authentication = (req: Request, res: Response, next: NextFuncti
               statusCode: 401,
               message: "Invalid Token"
             }
-          })
+          });
+        }
+        const token = decoded as AuthJWT;
+        if (!token) {
+          return res.status(401).json({
+            meta: {
+              statusCode: 401,
+              message: "Invalid Token Payload"
+            }
+          });
         }
         // flow normal token valido
         // mais alguma validação? talvez nao tenho certeza absoluta
         // authorization: put decoded user on request and forward
-        req.params.user_id = (<AuthJWT>decoded)?.user_id;
-        console.log(req.params.user_id);
+        req.params.user_id = token.user_id;
         next();
     })
   }

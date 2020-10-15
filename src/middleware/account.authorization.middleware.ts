@@ -48,8 +48,7 @@ export const authorizeAccountAccess = (req: Request, res: Response, next: NextFu
           }
         })
       }
-
-      console.log("Account Authorized. Proceeding...");
+      // proceed
       next();
     })
 }
