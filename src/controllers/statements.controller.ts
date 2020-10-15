@@ -6,7 +6,12 @@ import { extractAccountID, extractFullStatementQuery } from "@src/shared/stateme
 import { userInfo } from "os";
 
 
-// maybe use a cursor and an iterator?
+/**
+ * Fetches all of the logged-in account's statements
+ * @param req HTTP Request
+ * @param res HTTP Response
+ * @param next Express NextFunction
+ */
 export const getFullStatement = (req: Request, res: Response, next: NextFunction) =>
 {  
   const id: number = res.locals.accountID;
@@ -81,7 +86,7 @@ export const getFullStatement = (req: Request, res: Response, next: NextFunction
 }
 
 /**
- * Receives a list of Statements in the Request's body and tries to insert into the database
+ * Posts a list of statements into the Database
  * @param req HTTP Request
  * @param res HTTP Response
  * @param next Express NextFunction
@@ -115,6 +120,12 @@ export const createStatements = (req: Request, res: Response, next: NextFunction
     })
 }
 
+/**
+ * Receives a list of Statements in the Request's body and tries to insert into the database
+ * @param req HTTP Request
+ * @param res HTTP Response
+ * @param next Express NextFunction
+ */
 export const getLastStatement = (req: Request, res: Response, next: NextFunction) =>
 {
   const accountID = extractAccountID(req, res);
@@ -160,6 +171,12 @@ export const getLastStatement = (req: Request, res: Response, next: NextFunction
     )
 }
 
+/**
+ * Fetches all of the logged-in account's statements and groups them by credit and debit 
+ * @param req HTTP Request
+ * @param res HTTP Response
+ * @param next Express NextFunction
+ */
 export const getCardGroupedStatements = (req: Request, res: Response, next: NextFunction) =>
 {
   const userID: string = res.locals.user_id;

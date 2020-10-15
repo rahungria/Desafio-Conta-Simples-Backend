@@ -1,14 +1,18 @@
 import { Request, Response, NextFunction } from "express";
 
 import { AccountMongoModel, Accounts } from "@src/db/account.model.mongo";
-import { IAccount } from "@models/account.model";
 
-export const getSaldo = (req: Request, res: Response, next: NextFunction) =>
+/**
+ * Fetches the balance from the logged-in account
+ * @param req HTTP Request
+ * @param res HTTP Response
+ * @param next Express NextFunction
+ */
+export const getBalance = (req: Request, res: Response, next: NextFunction) =>
 {
-  // const id: number = +req.params.id;
+  // fetch account id set in authorization middleware
   const id: number = res.locals.accountID;
-  // maybe search by _id (difficult to debug via postman)
-  // Accounts.findOne({id: id})
+  
   Accounts.aggregate()
     .match({id: id})
     .project({_id:0, saldo: 1})
@@ -27,7 +31,7 @@ export const getSaldo = (req: Request, res: Response, next: NextFunction) =>
           message: "Account found"
         },
         content: {
-          saldo: document[0].saldo // or document[0], shouldn't ever be problem but...
+          saldo: document[0].saldo // array of documents (can't findOne)
         }
       })
     },
@@ -44,6 +48,12 @@ export const getSaldo = (req: Request, res: Response, next: NextFunction) =>
   return res.status(200);
 }
 
+/**
+ * Posts one account into the database
+ * @param req HTTP Request
+ * @param res HTTP Response
+ * @param next Express NextFunction
+ */
 export const createAccount = (req: Request, res: Response, next: NextFunction) =>
 {
   const acc : AccountMongoModel = new Accounts(req.body)
