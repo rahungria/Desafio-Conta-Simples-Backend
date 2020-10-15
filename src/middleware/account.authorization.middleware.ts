@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 
-import { UserMongoModel, Users } from "src/db/user.model.mongo";
+import { UserMongoModel, Users } from "db/user.model.mongo";
 
 
 /**

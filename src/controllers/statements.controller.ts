@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 
-import { StatementMongoModel, Statements } from "src/db/statement.model.mongo";
-import { extractAccountID, extractFullStatementQuery } from "src/shared/statements.shared";
+import { StatementMongoModel, Statements } from "db/statement.model.mongo";
+import { extractAccountID, extractFullStatementQuery } from "shared/statements.shared";
 
 
 /**

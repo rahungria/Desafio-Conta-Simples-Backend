@@ -1,8 +1,8 @@
 import jwt from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
 
-import { secrets } from "src/secrets/secrets";
-import { AuthJWT } from "src/model/authenticationJWT.model";
+import { secrets } from "secrets/secrets";
+import { AuthJWT } from "model/authenticationJWT.model";
 
 export const jwt_authentication = (req: Request, res: Response, next: NextFunction) => 
 {

@@ -2,8 +2,8 @@ import { Request, Response, NextFunction } from "express";
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken";
 
-import { UserMongoModel, Users } from "src/db/user.model.mongo";
-import { secrets } from "src/secrets/secrets";
+import { UserMongoModel, Users } from "db/user.model.mongo";
+import { secrets } from "secrets/secrets";
 
 export const login = (req: Request, res: Response, next: NextFunction) =>
 {  

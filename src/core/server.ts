@@ -4,9 +4,9 @@ import { exit } from "process";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 
-import { connect } from "src/config/dbconnection";
-import { secrets } from "src/secrets/secrets";
-import { router } from "src/core/router";
+import { connect } from "config/dbconnection";
+import { secrets } from "secrets/secrets";
+import { router } from "core/router";
 
 let app = express();
 
