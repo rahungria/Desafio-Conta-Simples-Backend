@@ -3,14 +3,12 @@ import { Request, Response, NextFunction } from "express";
 import { StatementMongoModel, Statements } from "@src/db/statement.model.mongo";
 import { isStatement, IStatement } from "@models/statement.model";
 import { extractAccountID, extractFullStatementQuery, validateStatements } from "@src/shared/statements.shared";
+import { userInfo } from "os";
 
 
 // maybe use a cursor and an iterator?
 export const getFullStatement = (req: Request, res: Response, next: NextFunction) =>
-{
-  // const id :number = extractAccountID(req,res);
-  console.log(res.locals);
-  
+{  
   const id: number = res.locals.accountID;
   // id is NaN
   if (!id){
@@ -161,6 +159,84 @@ export const getLastStatement = (req: Request, res: Response, next: NextFunction
             code: reason.code
           }
         })
+      }
+    )
+}
+
+export const getCardGroupedStatements = (req: Request, res: Response, next: NextFunction) =>
+{
+  const userID: string = res.locals.user_id;
+  const accountID: number= res.locals.accountID;
+
+  // maybe redundant code
+  if (!userID || !accountID){
+    return res.status(400).json({
+      meta: {
+        statusCode: 400,
+        message: "Missing credentials..."
+      }
+    })
+  }
+
+  Statements.aggregate()
+    .match({account_id: accountID})
+    .then(
+      (statements: StatementMongoModel[]) => {
+        
+        return new Promise
+        <{credit: StatementMongoModel[], 
+          debit: StatementMongoModel[]}>
+          ((resolve, reject) => {
+
+            if (!statements){
+              // no statements found for this account
+              reject({
+                meta: {
+                  statusCode: 404,
+                  message: "Account has no statements"
+                }
+              });
+            }
+            const credit = statements.filter( (value) => value.credito);
+            const debit = statements.filter( (value) => !value.credito);
+
+            resolve ({ credit, debit });
+          }
+        )
+      },
+      // DB Find fails
+      (reason) => {
+        // Sets Response and defines return type of then block to void
+        res.status(400).json({
+          meta: {
+            statusCode: 400,
+            message: "Couldn't fetch Statements",
+            code: reason.code
+          }
+        })
+      }
+    )
+    .then(
+      (filters) => {
+        // avoid case where it comes from last then's error (Response already set)
+        if (filters){
+          return res.status(200).json({
+            meta: {
+              statusCode: 200,
+              message: "Statements Fetched and Grouped"
+            },
+            content: {
+              statements: {
+                credit: filters.credit,
+                debit: filters.debit
+              }
+            }
+          })
+        }
+      },
+      // Account has no statements / couldn't find
+      (reason) => {
+        return res.status(404).json(reason)
       }
     )
 }

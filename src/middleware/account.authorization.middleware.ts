@@ -15,19 +15,6 @@ export const authorizeAccountAccess = (req: Request, res: Response, next: NextFu
   let accountID :number = +req.params.accountID; //optional
   const user_id: string = res.locals.user_id;
 
-  console.log("req.params: ");
-  console.log(req.query);  
-
-  // no account id found
-  // if (!accountID){
-  //   return res.status(400).json({
-  //     meta: {
-  //       statusCode: 400,
-  //       message: "account ID not passed in parameters"
-  //     }
-  //   })
-  // }
-
   // didn't pass though authentication middleware
   if (!user_id){
     return res.status(400).json({
