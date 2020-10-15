@@ -7,7 +7,7 @@ import { Request, Response } from "express";
  * @param req HTTP Request to get data from
  * @param res HTTP Response to exit prematurely if data is invalid
  */
-export const extractAccountID = (req: Request, res: Response) : number =>
+export const extractAccountID = (req: Request, res: Response) : number|null =>
 {
   const id :number = +req.params.accountID;
   // id is NaN
@@ -15,22 +15,26 @@ export const extractAccountID = (req: Request, res: Response) : number =>
     res.status(400).json({
       meta: {
         statusCode: 400,
-        message: "Invalid ID"
+        message: "Invalid ID / User has no authorization"
       },
     })
+    return null;
   }
   
   return id;
 }
 
 /**
- * Extracts all possible query params for fetching statements
+ * Extracts all possible query params for fetching statements:
+ * {'sort': 'sortByDate', 'filter': 'paymentType', 'accountID': ':accountID'}
  * @param req HTTP Request to extract queries
+ * @returns obj: {sort,filter,account}
  */
-export const extractFilterSortQuery = (req: Request) => 
+export const extractFullStatementQuery = (req: Request) => 
 {
   const sort: {[key:string]: number} = {};
   const filter: {[key:string]:any} = {};
+  let accountID: number = NaN;
   // payment type query specified
   if (req.query.paymentType){
     if (req.query.paymentType === "credit"){
@@ -46,8 +50,12 @@ export const extractFilterSortQuery = (req: Request) =>
       sort.dataTransacao = 1;
     }
   }
+  // fetches accountID to TRY to match
+  if (req.query.accountID){
+    accountID = +req.query.accountID
+  }
 
-  return { sort, filter }
+  return { sort, filter, accountID }
 }
 
 /**

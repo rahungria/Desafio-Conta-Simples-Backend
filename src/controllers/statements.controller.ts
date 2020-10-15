@@ -2,23 +2,42 @@ import { Request, Response, NextFunction } from "express";
 
 import { StatementMongoModel, Statements } from "@src/db/statement.model.mongo";
 import { isStatement, IStatement } from "@models/statement.model";
-import { extractAccountID, extractFilterSortQuery, validateStatements } from "@src/shared/statements.shared";
+import { extractAccountID, extractFullStatementQuery, validateStatements } from "@src/shared/statements.shared";
 
 
 // maybe use a cursor and an iterator?
 export const getFullStatement = (req: Request, res: Response, next: NextFunction) =>
 {
-  const id :number = extractAccountID(req,res);
+  // const id :number = extractAccountID(req,res);
+  console.log(res.locals);
+  
+  const id: number = res.locals.accountID;
   // id is NaN
   if (!id){
-    return;
+    return res.status(400).json({
+      meta: {
+        statusCode: 400,
+        message: "No account ID found" 
+      }
+    })
   }
 
   // Permissively matches filter and sorting based on query data
-  const { sort, filter } = extractFilterSortQuery(req);
+  const { sort, filter, accountID } = extractFullStatementQuery(req);
   filter.account_id = id;
   sort._id = 1;
 
+  // maybe permit or change logic based on different passed values, or have an array of permited accounts on user, etc...
+  // maybe move to authorization
+  // ignores accountID query if it can't parse it
+  if (accountID && accountID != id) {
+    return res.status(401).json({
+      meta: {
+        statusCode: 401,
+        message: "Tried to query account unnauthorized by user"
+      }
+    })
+  }
 
   Statements.aggregate()
     .match(filter)
@@ -40,8 +59,18 @@ export const getFullStatement = (req: Request, res: Response, next: NextFunction
             statusCode: 200,
             message: "Statements found",
             validQuery: { // valid queries for discovery
-              "paymentType": ["credit", "debit"],
-              "sortByDate": ["true"]
+              "accountID" : {
+                values: [":accountID"],
+                description: "forces a try to bypass authorization, mostly here for debugging / expansion (if the 'Account x Users' relation become a 'many x many')"
+              },
+              "paymentType": {
+                values: ["credit", "debit"],
+                description: "filter the statements to match the card used"
+              },
+              "sortByDate": {
+                values: ["true"],
+                description: "sort statements by date of transaction"
+              }
             }
           },
           content: {

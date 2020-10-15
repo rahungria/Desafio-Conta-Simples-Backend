@@ -43,9 +43,8 @@ export const jwt_authentication = (req: Request, res: Response, next: NextFuncti
           });
         }
         // flow normal token valido
-        // mais alguma validação? talvez nao tenho certeza absoluta
         // authorization: put decoded user on request and forward
-        req.params.user_id = token.user_id;
+        res.locals.user_id = token.user_id;
         next();
     })
   }
