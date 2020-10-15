@@ -2,11 +2,13 @@
   "name": "conta-simples-back",
   "version": "0.5.0",
   "description": "Backend implementation for the Desafio Conta Simples. To consist of mainly a Login API, an API to fetch and filter dummy data",
-  "main": "server.ts",
+  "main": "server.js",
   "engines": {
     "node": "12.18.4"
   },
   "scripts": {
+    "start": "node dist\\core\\server.js",
+    "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsc": "tsc",
     "dev": "ts-node-dev -r tsconfig-paths/register ./src/core/server.ts"

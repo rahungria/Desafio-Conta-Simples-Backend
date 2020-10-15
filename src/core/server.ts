@@ -1,12 +1,12 @@
 import cors from "cors";
 import express from "express";
+import { exit } from "process";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 
-import { connect } from "@configs/dbconnection";
-import { secrets } from "@src/secrets/secrets";
-import { router } from "@cores/router";
-import { exit } from "process";
+import { connect } from "src/config/dbconnection";
+import { secrets } from "src/secrets/secrets";
+import { router } from "src/core/router";
 
 let app = express();
 

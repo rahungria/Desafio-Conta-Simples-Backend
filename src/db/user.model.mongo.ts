@@ -1,7 +1,6 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
-import { IUser } from '@models/user.model';
-import { AccountMongoModel } from './account.model.mongo';
+import { IUser } from 'src/model/user.model';
 
 type UserMongoModel = IUser & Document;
 

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 
-import { AccountMongoModel, Accounts } from "@src/db/account.model.mongo";
+import { AccountMongoModel, Accounts } from "src/db/account.model.mongo";
 
 /**
  * Fetches the balance from the logged-in account

@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { createStatements, getCardGroupedStatements, getFullStatement, getLastStatement } from "@controllers/statements.controller";
+import { createStatements, getCardGroupedStatements, getFullStatement, getLastStatement } from "src/controllers/statements.controller";
 
 const router = Router();
 

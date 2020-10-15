@@ -1,6 +1,6 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
-import { IStatement } from '@models/statement.model';
+import { IStatement } from 'src/model/statement.model';
 
 type StatementMongoModel = IStatement & Document;
 

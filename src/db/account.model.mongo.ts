@@ -1,6 +1,6 @@
 import mongoose, { Document, mongo, Schema } from "mongoose";
 
-import { IAccount } from "@src/model/account.model";
+import { IAccount } from "src/model/account.model";
 
 type AccountMongoModel = IAccount & Document;
 

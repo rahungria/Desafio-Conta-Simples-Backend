@@ -1,4 +1,3 @@
-import { IStatement } from "@src/model/statement.model";
 import { Request, Response } from "express";
 
 /**
