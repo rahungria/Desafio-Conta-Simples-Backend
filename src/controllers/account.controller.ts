@@ -5,12 +5,15 @@ import { IAccount, isAccount } from "@models/account.model";
 
 export const getSaldo = (req: Request, res: Response, next: NextFunction) =>
 {
-  const id: number = +req.params.id;
+  // const id: number = +req.params.id;
+  const id: number = res.locals.accountID;
   // maybe search by _id (difficult to debug via postman)
-  Accounts.findOne({id: id}, {_id: 1})
-    .then( (document: AccountMongoModel|null) => {
-      console.log(document?._id);
-      if (!document){
+  // Accounts.findOne({id: id})
+  Accounts.aggregate()
+    .match({id: id})
+    .project({_id:0, saldo: 1})
+    .then( (document: AccountMongoModel[]|null) => {
+      if (!document || document.length === 0){
         return res.status(404).json({
           meta: {
             statusCode: 404,
@@ -24,7 +27,7 @@ export const getSaldo = (req: Request, res: Response, next: NextFunction) =>
           message: "Account found"
         },
         content: {
-          saldo: document.saldo
+          account: document[0] // or document[0], shouldn't ever be problem but...
         }
       })
     },

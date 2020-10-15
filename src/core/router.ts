@@ -8,8 +8,8 @@ import { authorizeAccountAccess } from "@src/middleware/account.authorization.mi
 
 const router = Router();
 
-router.use('/api/auth', AuthRoutes);
-router.use('/api/account', AccountsRoutes);
-router.use('/api/statements', jwt_authentication, authorizeAccountAccess, StatementsRoutes); // every routes requires full authorization
+router.use('/api/auth', AuthRoutes); // no authorization
+router.use('/api/account', jwt_authentication, authorizeAccountAccess, AccountsRoutes); // requires full authorization
+router.use('/api/statements', jwt_authentication, authorizeAccountAccess, StatementsRoutes); // requires full authorization
 
 export { router }
