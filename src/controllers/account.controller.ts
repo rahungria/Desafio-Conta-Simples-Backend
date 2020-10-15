@@ -27,7 +27,7 @@ export const getSaldo = (req: Request, res: Response, next: NextFunction) =>
           message: "Account found"
         },
         content: {
-          account: document[0] // or document[0], shouldn't ever be problem but...
+          saldo: document[0].saldo // or document[0], shouldn't ever be problem but...
         }
       })
     },
