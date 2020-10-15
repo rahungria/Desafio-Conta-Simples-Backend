@@ -2,59 +2,75 @@
 
 [Descrição do Desafio](https://gitlab.com/desafio-conta-simples/developer#backend)
 
-  
-
 Repositório contendo todo o código de backend para o desafio acima.
-
 Conterá instruções de uso e conexão, assim que for relevante.
 
-  > **default user:**
-  > username: *root*
-  > password: *root*
+
+> ## default users
+>> - username: *root*
+>> - password: *root*
+>> - owns account: *1*
+> 
+>> - username: *root2*
+>> - password: *root*
+>> - owns account: *2*
+> 
+>> - username: *root3*
+>> - password: *root*
+>> - owns account: *3*
 
   ## Implemented Endpoints
 >  ### Authentication
 >>
 >>   **POST /api/auth/login**
+>>  
 >>  post login information to get a JsonWebToken httponly cookie to authenticate user
 >
 >> **POST /api/auth/signup**
+>>  
 >> post user info to create new user
 >> - requires authentication
 >
 >  ### Accounts
->
+> - all routes require authentication and authorization
+>  
 >> **POST /api/account**
->> post new account info to create new account
->> - requires authentication
+>> 
+>> creates new user
 >
->> **GET /api/account/:id/saldo**
->> receives *id* of an account and tries to fetch the balance of the account
->> - requires *account id* in url params
->> - requires authentication
+>> **GET /api/account/saldo**
+>>  
+>> Fetches the balance of the account logged in
 >
 > ### Statements
-> 
+> - all routes requires authentication and authorization
+>  
 >> **POST /api/statements**
+>> 
 >> post an array of statements and saves to the DB
->> - requires authentication
->
->> **GET /api/statements/:accountID**
+>>  
+>> **GET /api/statements**
 >>> ***Query Params:***
+>>> + *accountID:*
+>>>     + *:accountID*
 >>> + *paymentType:*
 >>> 		+ *"credit"*
 >>> 		+ *"debit"*
 >>> + *sortByDate:*
 >>> 		+ *"true"*
->>
+>>  
 >> fetches all the statements from the given account, filtering and sorting according to the query params
->> - requires authentication
->> - requires authorization
->
->> **GET /api/statements/:accountID/last**
+>> 
+>> **GET /api/statements/last**
 >> fetches the last statement of the account whose user is logged in
 >> - requires authentication
 >> - requires authorization
 >>
 >> receives an *accountID* and fetches the full statement, filtered by: *paymentType* and sorted by: *date of emission*
->> + requires authentication
+
+## Enitity Relation
+```mermaid
+erDiagram
+USER ||--|| ACCOUNT : owns
+ACCOUNT }|--|{ STATEMENT : contains
+```
