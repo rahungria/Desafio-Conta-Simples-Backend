@@ -1,1 +1,1 @@
-web: node dist/core/server.js
+web: node -r tsconfig-paths/register -r ts-node/register dist/core/server.js
