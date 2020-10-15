@@ -48,7 +48,9 @@ export const authorizeAccountAccess = (req: Request, res: Response, next: NextFu
           }
         })
       }
-      // proceed
+      // store authorized account in params
+      req.params.accountID = `${accountID}`;
+      console.log(req.params.accountID);
       next();
     })
 }
