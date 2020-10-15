@@ -17,6 +17,7 @@ export const getFullStatement = (req: Request, res: Response, next: NextFunction
   // Permissively matches filter and sorting based on query data
   const { sort, filter } = extractFilterSortQuery(req);
   filter.account_id = id;
+  sort._id = 1;
 
 
   Statements.aggregate()
