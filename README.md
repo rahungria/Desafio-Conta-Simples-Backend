@@ -69,7 +69,7 @@ Conterá instruções de uso e conexão, assim que for relevante.
 >> receives an *accountID* and fetches the full statement, filtered by: *paymentType* and sorted by: *date of emission*
 
 ## Enitity Relation
-![Entity Relation Diagram](/img/entity-relation.png)
+![Entity Relation Diagram](/img/entity-relation-diagram.png)
 
 ## Diagrama de Classes dos Modelos
 ![Models Class Diagram](/img/model-ClassDiagram.png)
