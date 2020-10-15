@@ -6,18 +6,18 @@ Repositório contendo todo o código de backend para o desafio acima.
 Conterá instruções de uso e conexão, assim que for relevante.
 
 
-> ## default users
->> - username: *root*
->> - password: *root*
->> - owns account: *1*
-> 
->> - username: *root2*
->> - password: *root*
->> - owns account: *2*
-> 
->> - username: *root3*
->> - password: *root*
->> - owns account: *3*
+## default users
+> - username: *root*
+> - password: *root*
+> owns account: *1* 
+  
+> - username: *root2*
+> - password: *root*
+> owns account: *2*
+  
+> - username: *root3*
+> - password: *root*
+> owns account: *3*
 
   ## Implemented Endpoints
 >  ### Authentication
@@ -48,7 +48,7 @@ Conterá instruções de uso e conexão, assim que for relevante.
 >> **POST /api/statements**
 >> 
 >> post an array of statements and saves to the DB
->>  
+>  
 >> **GET /api/statements**
 >>> ***Query Params:***
 >>> + *accountID:*
@@ -60,7 +60,7 @@ Conterá instruções de uso e conexão, assim que for relevante.
 >>> 		+ *"true"*
 >>  
 >> fetches all the statements from the given account, filtering and sorting according to the query params
->> 
+>  
 >> **GET /api/statements/last**
 >> fetches the last statement of the account whose user is logged in
 >> - requires authentication
@@ -69,8 +69,7 @@ Conterá instruções de uso e conexão, assim que for relevante.
 >> receives an *accountID* and fetches the full statement, filtered by: *paymentType* and sorted by: *date of emission*
 
 ## Enitity Relation
-```mermaid
-erDiagram
-USER ||--|| ACCOUNT : owns
-ACCOUNT }|--|{ STATEMENT : contains
-```
+![Entity Relation Diagram](/img/entity-relation.png)
+
+## Diagrama de Classes dos Modelos
+![Models Class Diagram](/img/model-ClassDiagram.png)
