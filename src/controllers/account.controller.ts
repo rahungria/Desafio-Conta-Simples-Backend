@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 
 import { AccountMongoModel, Accounts } from "@src/db/account.model.mongo";
-import { IAccount, isAccount } from "@models/account.model";
+import { IAccount } from "@models/account.model";
 
 export const getSaldo = (req: Request, res: Response, next: NextFunction) =>
 {
@@ -46,17 +46,9 @@ export const getSaldo = (req: Request, res: Response, next: NextFunction) =>
 
 export const createAccount = (req: Request, res: Response, next: NextFunction) =>
 {
-  const acc : IAccount = req.body as IAccount;
-  if (!isAccount(acc)){
-    return res.status(400).json({
-      meta: {
-        statusCode: 400,
-        message: "Invalid account passed"
-      }
-    })
-  }
+  const acc : AccountMongoModel = new Accounts(req.body)
 
-  console.log(acc);
+  // auto validates
   Accounts.create(acc)
     .then(
       (document: AccountMongoModel) => {

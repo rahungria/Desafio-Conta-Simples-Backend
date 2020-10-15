@@ -81,13 +81,15 @@ export const signup = (req: Request, res: Response, next: NextFunction) =>
     // password hashed successfully
     .then( 
     (hash) => {
-      const user: IUser = {
-        username: req.body.username, 
-        password: hash, 
-        role: req.body.role
-      };
 
-      return Users.create(user); 
+      const user: UserMongoModel = new Users({
+        username: req.body.username,
+        password: hash,
+        role: req.body.role
+      }); 
+
+      // validates
+      return Users.create(user);
     },
     // Failed to hash password
     (reason) => {
@@ -122,7 +124,7 @@ export const signup = (req: Request, res: Response, next: NextFunction) =>
       return res.status(400).json({
         meta: {
           statusCode: 400,
-          message: message,
+          message: reason.message,
         }
       })
     })

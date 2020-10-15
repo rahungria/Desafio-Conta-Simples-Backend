@@ -17,8 +17,8 @@ const UserSchema: Schema<UserMongoModel> = new Schema<UserMongoModel>(
       required: true,
     },
     role: {
-      rolename: { type:String, required:false },
-      account: { type:Number, required:false }
+      rolename: { type:String, required:[true, "rolename required"], enum:["admin", "user"] },
+      account: { type:Number, required:[true, "account id required"] }
     }
   }
 )

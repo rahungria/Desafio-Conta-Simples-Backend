@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 
 import { StatementMongoModel, Statements } from "@src/db/statement.model.mongo";
-import { isStatement, IStatement } from "@models/statement.model";
-import { extractAccountID, extractFullStatementQuery, validateStatements } from "@src/shared/statements.shared";
+import { IStatement } from "@models/statement.model";
+import { extractAccountID, extractFullStatementQuery } from "@src/shared/statements.shared";
 import { userInfo } from "os";
 
 
@@ -88,11 +88,9 @@ export const getFullStatement = (req: Request, res: Response, next: NextFunction
  */
 export const createStatements = (req: Request, res: Response, next: NextFunction) =>
 {
-  let statements = validateStatements(req,res);
-  if (!statements){
-    return;
-  }
+  const statements: StatementMongoModel[] = (req.body);
 
+  // validates body
   Statements.insertMany(statements)
     .then(
       (statements: StatementMongoModel[]) => {
@@ -106,13 +104,12 @@ export const createStatements = (req: Request, res: Response, next: NextFunction
           }
         })
       },
-      // insertMany fails
+      // insertMany fails, validation
       (reason) => {
       return res.status(400).json({
         meta: {
           statusCode: 400,
-          message: "Statements couldn't be created",
-          code: reason.code
+          message: reason.message,
         }
       })
     })
@@ -188,7 +185,7 @@ export const getCardGroupedStatements = (req: Request, res: Response, next: Next
           debit: StatementMongoModel[]}>
           ((resolve, reject) => {
 
-            if (!statements){
+            if (!statements || statements.length === 0){
               // no statements found for this account
               reject({
                 meta: {

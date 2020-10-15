@@ -1,4 +1,4 @@
-import { isStatement, IStatement } from "@src/model/statement.model";
+import { IStatement } from "@src/model/statement.model";
 import { Request, Response } from "express";
 
 /**
@@ -56,27 +56,4 @@ export const extractFullStatementQuery = (req: Request) =>
   }
 
   return { sort, filter, accountID }
-}
-
-/**
- * Goes through body of Request to validate that it consists only of Statements
- * @param req HTTP Request to extract array of Statements from body
- * @param res HTTP Response to return prematurely if the Request body is invalid
- */
-export const validateStatements = (req: Request, res: Response) : IStatement[] | null => 
-{
-  const statements: IStatement[] = req.body as IStatement[];
-  // if statement data in body is malformed maybe remove of replace (sync...)
-  for (let statement of statements){
-    if (!isStatement(statement)){
-      res.status(400).json({
-        meta: {
-          statusCode: 400,
-          message: "Invalid Statement"
-        }
-      })
-      return null;
-    }
-  }
-  return statements;
 }
